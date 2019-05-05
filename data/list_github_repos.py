@@ -23,7 +23,6 @@ sys.stderr.write('Getting: {}\n'.format(url))
 response = requests.get(url)
 
 if response.status_code == 200:
-  sys.stdout.write(response.text)
   obj = json.loads(response.text)
 
   for item in obj['items']:
