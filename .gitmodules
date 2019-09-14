@@ -1,0 +1,9 @@
+[submodule "data/sentencepiece"]
+	path = data/sentencepiece
+	url = https://github.com/google/sentencepiece.git
+[submodule "data/javalang"]
+	path = data/javalang
+	url = https://github.com/leod/javalang.git
+[submodule "data/subword-nmt"]
+	path = data/subword-nmt
+	url = https://github.com/rsennrich/subword-nmt.git
