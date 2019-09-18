@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Retrieve a list of GitHub repositories of a given programming language.
+
+The output is written to stdout in two columns, where the first column
+is the SSH clone url and the second column is the default branch.
 """
 
 import sys
@@ -30,8 +33,7 @@ for page in range(args.pages):
     #print(json.dumps(obj, indent=4))
 
     for item in obj['items']:
-      sys.stdout.write(item['ssh_url'])
-      sys.stdout.write('\n')
+      sys.stdout.write('{}\t{}\n'.format(item['ssh_url'], item['default_branch']))
 
     #sys.stderr.write('Response is incomplete? {}\n'.format(obj['incomplete_results']))
   else:
