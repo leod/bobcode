@@ -7,11 +7,11 @@ mkdir -p $WORK
 if [ ! -e $WORK/repos.txt ]; then
   echo "1] Downloading list of repos"
 
-  # 30 entries per page => 300 repositories
+  # 30 entries per page => 1500 repositories
   $(dirname $0)/list_github_repos.py \
     --min_stars 500 \
     --language java \
-    --pages 10 \
+    --pages 50 \
   > $WORK/repos.txt \
   2> $WORK/repos.log
 
