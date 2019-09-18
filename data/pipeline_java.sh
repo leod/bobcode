@@ -35,5 +35,14 @@ for file in $(find $WORK/downloads -name '*.zip'); do
   fi
 done
 
-echo "4] Calculating statistics"
-$(dirname $0)/repos_stats.sh $WORK '*.java' | tee $WORK/stats.repos.txt
+if [ ! -e $WORK/stats.repos.txt ]; then
+  echo "4] Calculating statistics"
+  $(dirname $0)/repos_stats.sh $WORK '*.java' | tee $WORK/stats.repos.txt
+fi
+
+echo "5] Preprocessing"
+find $WORK/repos -name '*.java' | while IFS='\n' read file; do
+  if [ ! -e "$file.pp" ]; then
+    PYTHONPATH=$(dirname $0)/javalang $(dirname $0)/java_tokenize.py <(sed -e 's/\t/    /g' "$file") > "$file.pp"
+  fi
+done
