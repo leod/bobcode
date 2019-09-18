@@ -35,4 +35,5 @@ for file in $(find $WORK/downloads -name '*.zip'); do
   fi
 done
 
-echo "4] "
+echo "4] Calculating statistics"
+$(dirname $0)/repos_stats.sh $WORK '*.java' | tee $WORK/stats.repos.txt
