@@ -5,6 +5,7 @@ import javalang
 
 SPACE_SYMBOL = '▁'
 NEWLINE_SYMBOL = '▏'
+EOF_SYMBOL = '▗'
 
 def replace_consecutive(s, x, y, y_after):
   i = 0
@@ -54,3 +55,5 @@ with open(sys.argv[1]) as f:
 
     sys.stdout.write(text.strip(' '))
     sys.stdout.write(' ')
+
+sys.stdout.write(EOF_SYMBOL)
