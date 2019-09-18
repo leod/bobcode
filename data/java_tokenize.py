@@ -6,17 +6,21 @@ import javalang
 SPACE_SYMBOL = '▁'
 NEWLINE_SYMBOL = '▏'
 
-def replace_consecutive(s, x, y):
+def replace_consecutive(s, x, y, y_after):
   i = 0
   new_s = ''
   start = None
+  was_newline = False
 
   while i < len(s):
     if s[i] == x and start is None:
       start = i
+      was_newline = (i == 0 or s[i-1] == '\n')
     elif start is not None:
       if s[i] != x:
-        new_s += ' ' + y * (i - start) + ' ' + s[i]
+        if not was_newline:
+          new_s += ' '
+        new_s += y * (i - start) + y_after + s[i]
         start = None
     else:
       new_s += s[i]
@@ -45,8 +49,8 @@ with open(sys.argv[1]) as f:
     # Join consecutive space symbols or newline symbols into a single word
     text = tok.value
 
-    text = replace_consecutive(text, ' ', SPACE_SYMBOL)
-    #text = replace_consecutive(text, '\n', NEWLINE_SYMBOL)
+    text = replace_consecutive(text, x=' ', y=SPACE_SYMBOL, y_after=' ')
+    text = replace_consecutive(text, x='\n', y=NEWLINE_SYMBOL, y_after='\n')
 
     sys.stdout.write(text.strip(' '))
     sys.stdout.write(' ')
