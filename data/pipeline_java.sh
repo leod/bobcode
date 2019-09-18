@@ -15,15 +15,13 @@ if [ ! -e $WORK/repos.txt ]; then
   > $WORK/repos.txt \
   2> $WORK/repos.log
 
-  echo "Got list of java repos with $(wc -l <$WORK/repos.txt) entries"
+  echo "Got list of java repos with $(wc -l < $WORK/repos.txt) entries"
 fi
 
-if [ ! -e $WORK/downloads ]; then
-  echo "2] Downloading repos"
+echo "2] Downloading repos"
+mkdir -p $WORK/downloads
 
-  mkdir -p $WORK/downloads
-  $(dirname $0)/download_repos.sh $WORK/downloads < $WORK/repos.txt
-fi
+$(dirname $0)/download_repos.sh $WORK/downloads < $WORK/repos.txt
 
 echo "3] Unzipping downloads"
 mkdir -p $WORK/repos
@@ -36,3 +34,5 @@ for file in $(find $WORK/downloads -name '*.zip'); do
     unzip -q -d $target $file '*.java'
   fi
 done
+
+echo "4] "

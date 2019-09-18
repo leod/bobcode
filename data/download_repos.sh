@@ -14,7 +14,7 @@ while read repo branch; do
 
   if [ ! -e $target ]; then
     url="https://github.com/$owner/$name/archive/$branch.zip"
-    echo "Downloading $target from $url"
+    echo "Downloading '$target' from $url"
     wget -O $target $url
   fi
 done
