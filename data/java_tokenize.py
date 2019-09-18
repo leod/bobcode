@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import sys
-import javalang
+
+# We use our own fork of javalang, which is located within a submodule
+from javalang import tokenizer
 
 SPACE_SYMBOL = '▁'
 NEWLINE_SYMBOL = '▏'
@@ -39,12 +41,13 @@ def tokenize(s, out):
   prev_line = 1
   prev_column = 1
 
-  for tok in javalang.tokenizer.tokenize(contents):
+  for tok in tokenizer.tokenize(contents):
     num_newlines = tok.position[0] - prev_line
     if num_newlines > 0:
       out.write(NEWLINE_SYMBOL * num_newlines)
       out.write('\n')
       prev_column = 1
+
     value = tok.value.strip()
     prev_line = tok.position[0] + value.count('\n')
 
@@ -52,15 +55,32 @@ def tokenize(s, out):
     if num_spaces > 0:
       out.write(SPACE_SYMBOL * num_spaces)
       out.write(' ')
+
     prev_column = tok.position[1] + len(tok.value)
 
-    # Join consecutive space symbols or newline symbols into a single word
-    text = value
-    text = replace_consecutive(text, x=' ', y=SPACE_SYMBOL, y_after=' ')
-    text = replace_consecutive(text, x='\n', y=NEWLINE_SYMBOL, y_after='\n')
+    # Split quotes from values
+    if isinstance(tok, tokenizer.String):
+      out.write('" ')
+      value = value[1:-1]
+    if isinstance(tok, tokenizer.Character):
+      out.write("' ")
+      value = value[1:-1]
 
-    out.write(text.strip(' '))
+    if isinstance(tok, tokenizer.String) or isinstance(tok, tokenizer.Comment):
+      # Join consecutive space symbols or newline symbols into a single word,
+      # so that whitespace is encoded the same between tokens and within
+      # tokens.
+      value = replace_consecutive(value, x=' ', y=SPACE_SYMBOL, y_after=' ')
+      value = replace_consecutive(value, x='\n', y=NEWLINE_SYMBOL, y_after='\n')
+
+    out.write(value.strip(' '))
     out.write(' ')
+
+    if isinstance(tok, tokenizer.String):
+      out.write('" ')
+    if isinstance(tok, tokenizer.Character):
+      out.write("' ")
+
   out.write(EOF_SYMBOL)
 
 if __name__ == '__main__':
