@@ -12,6 +12,12 @@ N_REPOS_TEST=50
 N_FILES_DEV=100
 N_LINES_TEST=100
 
+# Number of BPE symbols per sample for training data
+SAMPLE_SIZE=512
+
+# Number of samples to generate for training data
+NUM_SAMPLES=40000000
+
 echo "Working in '$WORK'"
 
 mkdir -p $WORK
@@ -110,7 +116,7 @@ fi
 mkdir -p $WORK/data
 
 if [ ! -e $WORK/data/alltrain.java.pp ]; then
-  echo "8] Concatenating all training data"
+  echo "8] Concatenating all training data after preprocessing"
 
   find $(< $WORK/repo-paths.train.txt) \
     -type f \
@@ -164,4 +170,29 @@ if [ ! -e $WORK/stats.repos.pp.bpe.txt ]; then
   echo "12] Calculating statistics"
   $(dirname $0)/repos_stats.sh $WORK/repos '*.bpe' \
     | tee $WORK/stats.repos.pp.bpe.txt
+fi
+
+if [ ! -e $WORK/data/alltrain.java.pp.bpe ]; then
+  echo "13] Concatenating all training data after BPE"
+
+  find $(< $WORK/repo-paths.train.txt) \
+    -type f \
+    -name '*.java.pp.bpe' \
+    -print0 \
+    | xargs -0 cat \
+    > $WORK/data/alltrain.java.pp.bpe
+  
+  wc $WORK/data/alltrain.java.pp.bpe
+fi
+
+if [ ! -e $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe ]; then
+  echo "14] Sampling chunked training examples"
+
+  $(dirname $0)/sample_chunked_data.py \
+    --sample_size $SAMPLE_SIZE \
+    --num_samples $NUM_SAMPLES \
+    < $WORK/data/alltrain.java.pp.bpe \
+    > $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe
+
+  wc $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe
 fi

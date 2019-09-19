@@ -58,10 +58,10 @@ if __name__ == '__main__':
 
   args = parser.parse_args()
 
-  sys.stderr.write('Reading from stdin...')
+  sys.stderr.write('Reading from stdin...\n')
   words, lengths = read_words_and_lengths(sys.stdin)
 
-  sys.stderr.write('Generating samples...')
+  sys.stderr.write('Generating samples...\n')
   n_gen = 0
   for _ in range(args.num_samples):
     s = sample(words, lengths, args.sample_size)
