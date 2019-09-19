@@ -97,6 +97,7 @@ if [ ! -e $WORK/repo-paths.dev.txt ]; then
   # sampling files from those repos to construct the dev/test sets.
 
   ls -d $WORK/repos/*/ \
+    | shuf \
     | awk \
       -v n_dev=$N_REPOS_DEV \
       -v n_test=$N_REPOS_TEST \
