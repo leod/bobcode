@@ -1,0 +1,8 @@
+number of repos	1020
+number of files	645181
+number of lines	86882330
+number of words	1059953048
+number of chars	6683500455
+files/repo	632.53039215686274509803
+lines/file	134.66349753015045390363
+words/line	12.19986904126535280534

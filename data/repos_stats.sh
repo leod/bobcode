@@ -15,4 +15,5 @@ number of lines\t$lines
 number of words\t$words
 number of chars\t$chars
 files/repo\t$(bc -l <<< $files/$repos)
-lines/file\t$(bc -l <<< $lines/$files)"
+lines/file\t$(bc -l <<< $lines/$files)
+words/line\t$(bc -l <<< $words/$lines)"

@@ -37,12 +37,21 @@ done
 
 if [ ! -e $WORK/stats.repos.txt ]; then
   echo "4] Calculating statistics"
-  $(dirname $0)/repos_stats.sh $WORK '*.java' | tee $WORK/stats.repos.txt
+  $(dirname $0)/repos_stats.sh $WORK/repos '*.java' \
+    | tee $WORK/stats.repos.txt
 fi
 
 echo "5] Preprocessing"
 find $WORK/repos -name '*.java' | while IFS='\n' read file; do
   if [ ! -e "$file.pp" ]; then
-    PYTHONPATH=$(dirname $0)/javalang $(dirname $0)/java_tokenize.py <(sed -e 's/\t/    /g' "$file") > "$file.pp"
+    PYTHONPATH=$(dirname $0)/javalang $(dirname $0)/java_tokenize.py \
+      <(sed -e 's/\t/    /g' "$file") \
+      > "$file.pp"
   fi
 done
+
+if [ ! -e $WORK/stats.repos.pp.txt ]; then
+  echo "6] Calculating statistics"
+  $(dirname $0)/repos_stats.sh $WORK/repos '*.pp' \
+    | tee $WORK/stats.repos.pp.txt
+fi
