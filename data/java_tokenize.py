@@ -81,7 +81,7 @@ def tokenize(s, out):
     if isinstance(tok, tokenizer.Character):
       out.write("' ")
 
-  out.write(EOF_SYMBOL)
+  out.write(EOF_SYMBOL + '\n')
 
 if __name__ == '__main__':
   with open(sys.argv[1]) as f:
