@@ -104,7 +104,9 @@ if [ ! -e $WORK/repo-paths.dev.txt ]; then
        }'
 fi
 
-if [ ! -e $WORK/alltrain.java.pp ]; then
+mkdir -p $WORK/data
+
+if [ ! -e $WORK/data/alltrain.java.pp ]; then
   echo "8] Concatenating all training data"
 
   find $(< $WORK/repo-paths.train.txt) \
@@ -112,7 +114,28 @@ if [ ! -e $WORK/alltrain.java.pp ]; then
     -name '*.java.pp' \
     -print0 \
     | xargs -0 cat \
-    > $WORK/alltrain.java.pp
+    > $WORK/data/alltrain.java.pp
   
-  wc $WORK/alltrain.java.pp
+  wc $WORK/data/alltrain.java.pp
+fi
+
+if [ ! -e $WORK/data/alltrain.5M.java.pp ]; then
+  echo "9] Sampling 5M lines for training BPE"
+
+  shuf $WORK/alltrain.java.pp \
+    | head -n 5000000 \
+    > $WORK/data/alltrain.5M.java.pp
+
+  wc $WORK/data/alltrain.5M.java.pp
+fi
+
+if [ ! -e $WORK/data/bpecodes ]; then
+  echo "10] Training subword units (BPE)"
+
+  subword-nmt learn-bpe \
+    --symbols 24000 \
+    < $WORK/data/alltrain.5M.java.pp \
+    > $WORK/data/bpecodes
+
+  wc $WORK/bpecodes
 fi
