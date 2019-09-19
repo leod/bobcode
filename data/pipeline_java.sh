@@ -1,6 +1,9 @@
 # Output directory
 WORK=work/java
 
+# Number of processes for parallel execution
+NPROC=16
+
 # Number of repos to leave for dev/test
 N_REPOS_DEV=50
 N_REPOS_TEST=50
@@ -137,5 +140,28 @@ if [ ! -e $WORK/data/bpecodes ]; then
     < $WORK/data/alltrain.5M.java.pp \
     > $WORK/data/bpecodes
 
-  wc $WORK/bpecodes
+  wc $WORK/data/bpecodes
+fi
+
+echo "11] Applying BPE"
+
+find $WORK/repos -type f -name '*.pp' \
+  | while IFS='\n' read file; do
+      if [ ! -e "$file.bpe" ]; then
+        echo "$file"
+      fi
+    done \
+  | parallel \
+      --verbose \
+      -j$NPROC \
+      subword-nmt apply-bpe \
+        --codes $WORK/data/bpecodes \
+        '<' {} \
+        '>' {}.bpe \
+    > $WORK/apply-bpe.log 2>&1
+
+if [ ! -e $WORK/stats.repos.pp.bpe.txt ]; then
+  echo "12] Calculating statistics"
+  $(dirname $0)/repos_stats.sh $WORK/repos '*.bpe' \
+    | tee $WORK/stats.repos.pp.bpe.txt
 fi
