@@ -148,25 +148,33 @@ int main(int argc, const char** argv) {
   
   std::string corpus = get_file_contents(argv[1]);
 
-  std::cerr << "Done. Parsing corpus into words...";
+  std::cerr << "Done.\nParsing corpus into words..." << std::endl;
 
   std::vector<size_t> word_starts;
   std::vector<size_t> file_lengths;
   size_t n_files = parse_words_and_lengths(corpus, word_starts, file_lengths);
 
   std::cerr << "Done. Read " << word_starts.size() << " words "
-    << " in " << n_files << " files.";
+    << "in " << n_files << " files." << std::endl;
 
   size_t sample_size = std::stoi(argv[2]);
   size_t num_samples = std::stoi(argv[3]);
 
+  /*for (size_t i = 0; i < word_starts.size(); i++) {
+    write_word(corpus, word_starts[i], std::cout);
+    std::cout << '\t' << file_lengths[i] << std::endl;
+  }
+  return 0;*/
+
   std::cerr << "Sampling " << num_samples << " chunks of size " << sample_size
-    << std::endl;
+    << "..." << std::endl;
 
   for (size_t i = 0; i < num_samples; i++) {
     sample_chunk(corpus, word_starts, file_lengths, sample_size, std::cout);
     std::cout << '\n';
   }
+
+  std::cerr << "All done." << std::endl;
 
   return 0;
 }
