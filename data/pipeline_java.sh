@@ -189,15 +189,8 @@ if [ ! -e $WORK/data/alltrain.java.pp.bpe ]; then
   wc $WORK/data/alltrain.java.pp.bpe
 fi
 
-if [ ! -e $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe ]; then
+if [ ! -e $WORK/data/alltrain.samples.java.pp.bpe ]; then
   echo "14] Sampling chunked training examples"
-
-  # OOM:
-  #$(dirname $0)/sample_chunked_data.py \
-  #  --sample_size $SAMPLE_SIZE \
-  #  --num_samples $NUM_SAMPLES \
-  #  < $WORK/data/alltrain.java.pp.bpe \
-  #  > $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe
 
   mkdir -p bin
   g++ -std=c++17 -O3 \
@@ -208,9 +201,9 @@ if [ ! -e $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe ]; then
     $WORK/data/alltrain.java.pp.bpe \
     $SAMPLE_SIZE \
     $NUM_SAMPLES \
-    > $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe 
+    > $WORK/data/alltrain.samples.java.pp.bpe 
 
-  wc $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe
+  wc $WORK/data/alltrain.samples.java.pp.bpe
 fi
 
 if [ ! -e $WORK/data/vocab ]; then
