@@ -37,9 +37,11 @@ def replace_consecutive(s, x, y, y_after):
 
   return new_s
 
-def tokenize(s, out):
+def tokenize(s, out, skip_license=False):
   prev_line = 1
   prev_column = 1
+
+  had_package = False
 
   for tok in tokenizer.tokenize(contents):
     num_newlines = tok.position[0] - prev_line
@@ -57,6 +59,13 @@ def tokenize(s, out):
       out.write(' ')
 
     prev_column = tok.position[1] + len(tok.value)
+
+    if isinstance(tok, tokenizer.Keyword) and tok.value == 'package':
+      had_package = True
+
+    if skip_license and isinstance(tok, tokenizer.Comment) and not had_package:
+      prev_line += 1
+      continue
 
     # Split quotes from values
     if isinstance(tok, tokenizer.String):
@@ -86,7 +95,7 @@ def tokenize(s, out):
 if __name__ == '__main__':
   with open(sys.argv[1]) as f:
     contents = f.read()
-    tokenize(contents, sys.stdout)
+    tokenize(contents, sys.stdout, skip_license=True)
 
     #for tok in javalang.tokenizer.tokenize(contents):
     #  print("TOK", tok, tok.position)
