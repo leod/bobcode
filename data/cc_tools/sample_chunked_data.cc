@@ -116,6 +116,14 @@ void sample_chunk(const std::string& corpus,
     std::ostream& out) {
   size_t k = myrand(word_starts.size() - 1);
 
+  // This makes the sampling less fair by maximizing the sample size as much
+  // as possible, but on the other hand it should help prevent getting too
+  // many `EOF_SYMBOL`s.
+  for (; k > 0
+         && file_lengths[k] < sample_size
+         && file_lengths[k-1] > file_lengths[k]
+       ; k--);
+
   size_t actual_sample_size = std::min(sample_size, file_lengths[k]);
   for (size_t i = 0; i < actual_sample_size; i++) {
     write_word(corpus, word_starts[k+i], out);
