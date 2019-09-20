@@ -67,13 +67,12 @@ if [ ! -e $WORK/stats.repos.txt ]; then
 fi
 
 echo "5] Preprocessing"
-find $WORK/repos -name '*.java' | while IFS='\n' read file; do
-  if [ ! -e "$file.pp" ]; then
-    PYTHONPATH=$(dirname $0)/javalang $(dirname $0)/java_tokenize.py \
-      <(sed -e 's/\t/    /g' "$file") \
-      > "$file.pp"
-  fi
-done
+find $WORK/repos -type f -name '*.java' \
+  | parallel \
+      --verbose \
+      -j$NPROC \
+      $(dirname $0)/java_tokenize_helper.sh {} \
+    > $WORK/tokenize.log 2>&1
 
 if [ ! -e $WORK/stats.repos.pp.txt ]; then
   echo "6] Calculating statistics"
