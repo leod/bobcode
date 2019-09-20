@@ -132,7 +132,7 @@ fi
 if [ ! -e $WORK/data/alltrain.5M.java.pp ]; then
   echo "9] Sampling 5M lines for training BPE"
 
-  shuf $WORK/alltrain.java.pp \
+  shuf $WORK/data/alltrain.java.pp \
     | head -n 5000000 \
     > $WORK/data/alltrain.5M.java.pp
 
