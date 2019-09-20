@@ -114,18 +114,13 @@ void sample_chunk(const std::string& corpus,
     const std::vector<size_t>& file_lengths,
     size_t sample_size,
     std::ostream& out) {
-  for(;;) {
-    size_t k = myrand(word_starts.size() - 1);
+  size_t k = myrand(word_starts.size() - 1);
 
-    if (file_lengths[k] >= sample_size) {
-      for (size_t i = 0; i < sample_size; i++) {
-        write_word(corpus, word_starts[k+i], out);
-        if (i + 1 < sample_size)
-          out << ' ';
-      }
-
-      return;
-    }
+  size_t actual_sample_size = std::min(sample_size, file_lengths[k]);
+  for (size_t i = 0; i < actual_sample_size; i++) {
+    write_word(corpus, word_starts[k+i], out);
+    if (i + 1 < sample_size)
+      out << ' ';
   }
 }
 
