@@ -18,6 +18,9 @@ SAMPLE_SIZE=512
 # Number of samples to generate for training data
 NUM_SAMPLES=40000000
 
+# Minimal frequency for the vocabulary
+MIN_FREQ=50
+
 echo "Working in '$WORK'"
 
 mkdir -p $WORK
@@ -208,4 +211,11 @@ if [ ! -e $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe ]; then
     > $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe 
 
   wc $WORK/data/alltrain.samples-$SAMPLE_SIZE.java.pp.bpe
+fi
+
+if [ ! -e $WORK/data/vocab ]; then
+  onmt-build-vocab \
+    --min_frequency $MIN_FREQ \
+    $WORK/data/alltrain.java.pp.bpe \
+    --save_vocab $WORK/data/vocab
 fi
