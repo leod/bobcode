@@ -1,5 +1,2 @@
-[submodule "data/sentencepiece"]
-	path = data/sentencepiece
-	url = https://github.com/google/sentencepiece.git
 [submodule "data/javalang"]
 	path = data/javalang
