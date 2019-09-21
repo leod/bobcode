@@ -188,8 +188,17 @@ if [ ! -e $WORK/data/alltrain.java.pp.bpe ]; then
   wc $WORK/data/alltrain.java.pp.bpe
 fi
 
+if [ ! -e $WORK/data/vocab ]; then
+  echo "14] Building vocabulary"
+
+  onmt-build-vocab \
+    --min_frequency $MIN_FREQ \
+    $WORK/data/alltrain.java.pp.bpe \
+    --save_vocab $WORK/data/vocab
+fi
+
 if [ ! -e $WORK/data/alltrain.samples.java.pp.bpe ]; then
-  echo "14] Sampling chunked training examples"
+  echo "15] Sampling chunked training examples"
 
   mkdir -p bin
   g++ -std=c++17 -O3 \
@@ -200,16 +209,8 @@ if [ ! -e $WORK/data/alltrain.samples.java.pp.bpe ]; then
     $WORK/data/alltrain.java.pp.bpe \
     $SAMPLE_SIZE \
     $NUM_SAMPLES \
+    | $(dirname $0)/filter_unks.py $WORK/data/vocab \
     > $WORK/data/alltrain.samples.java.pp.bpe 
 
   wc $WORK/data/alltrain.samples.java.pp.bpe
-fi
-
-if [ ! -e $WORK/data/vocab ]; then
-  echo "15] Building vocabulary"
-
-  onmt-build-vocab \
-    --min_frequency $MIN_FREQ \
-    $WORK/data/alltrain.java.pp.bpe \
-    --save_vocab $WORK/data/vocab
 fi
