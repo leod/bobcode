@@ -18,6 +18,9 @@ SAMPLE_SIZE=512
 # Number of samples to generate for training data
 NUM_SAMPLES=40000000
 
+# Percentage of samples to *attempt* to unindent
+PERC_UNINDENT=50
+
 # Minimal frequency for the vocabulary
 MIN_FREQ=50
 
@@ -209,6 +212,7 @@ if [ ! -e $WORK/data/alltrain.samples.java.pp.bpe ]; then
     $WORK/data/alltrain.java.pp.bpe \
     $SAMPLE_SIZE \
     $NUM_SAMPLES \
+    | $(dirname $0)/unindent_samples.py $PERC_UNINDENT \
     | $(dirname $0)/filter_unks.py $WORK/data/vocab \
     > $WORK/data/alltrain.samples.java.pp.bpe 
 

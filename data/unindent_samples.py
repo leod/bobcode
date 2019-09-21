@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import random
 
 SPACE_SYMBOL = '▁'
 NEWLINE_SYMBOL = '▏'
@@ -61,7 +62,25 @@ def unindent_sample(sample):
   return result + '\n'
 
 if __name__ == '__main__':
+  percent = int(sys.argv[1])
+
+  sys.stderr.write('Will attempt to unindent {}% of samples\n'.format(percent))
+
+  n_done = 0
+  n_unindented = 0
+
   for sample in sys.stdin:
-    unindented = unindent_sample(sample)
-    if unindented:
-      sys.stdout.write(unindented)
+    if random.randint(0, 99) < percent:
+      unindented = unindent_sample(sample)
+      if unindented:
+        sys.stdout.write(unindented)
+        n_unindented += 1
+      else:
+        sys.stdout.write(sample)
+    else:
+      sys.stdout.write(sample)
+
+    n_done += 1
+
+  sys.stderr.write('Done. Unindented {} lines out of {} ({:.2f}%)\n'
+      .format(n_unindented, n_done, float(n_unindented) / n_done * 100.0))
