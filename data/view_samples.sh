@@ -1,4 +1,4 @@
 #!/bin/bash
 
 awk 1 ORS="\n=============================================================\n" \
-  | ../../../postprocess.sh
+  | $(dirname $0)/postprocess.sh
