@@ -1,0 +1,4 @@
+data:
+  train_features_file: ../data/work/java/data/alltrain.samples.java.pp.bpe
+  eval_features_file: ../data/work/java/data/alltrain.samples.java.pp.bpe
+  vocabulary: ../data/work/java/data/vocab

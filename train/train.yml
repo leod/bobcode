@@ -1,0 +1,14 @@
+params:
+  optimizer: AdamOptimizer
+  learning_rate: 2.5e-4
+  gradients_accum: 32
+
+train:
+  save_checkpoints_steps: 1000
+  keep_checkpoint_max: 100
+  train_steps: 300000
+  sample_buffer_size: 0
+  batch_type: tokens
+  batch_size: 1024
+  maximum_features_length: null
+  maximum_labels_length: null
