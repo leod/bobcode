@@ -8,15 +8,14 @@ NPROC=16
 N_REPOS_DEV=50
 N_REPOS_TEST=50
 
-# Number of files to sample from the dev/test repos
-N_FILES_DEV=100
-N_LINES_TEST=100
-
 # Number of BPE symbols per sample for training data
 SAMPLE_SIZE=512
 
 # Number of samples to generate for training data
 NUM_SAMPLES=40000000
+
+# Number of samples to generate for dev data
+NUM_SAMPLES_DEV=10000
 
 # Percentage of samples to *attempt* to unindent
 PERC_UNINDENT=50
@@ -217,4 +216,26 @@ if [ ! -e $WORK/data/alltrain.samples.java.pp.bpe ]; then
     > $WORK/data/alltrain.samples.java.pp.bpe 
 
   wc $WORK/data/alltrain.samples.java.pp.bpe
+fi
+
+if [ ! -e $WORK/data/dev.samples.java.pp.bpe ]; then
+  echo "15] Sampling chunked dev examples"
+
+  find $(< $WORK/repo-paths.dev.txt) \
+    -type f \
+    -name '*.java.pp.bpe' \
+    -print0 \
+    | xargs -0 cat \
+    > $WORK/data/dev.java.pp.bpe
+  wc $WORK/data/dev.java.pp.bpe
+
+  bin/sample_chunked_data \
+    $WORK/data/dev.java.pp.bpe \
+    $SAMPLE_SIZE \
+    $NUM_SAMPLES_DEV \
+    | $(dirname $0)/unindent_samples.py $PERC_UNINDENT \
+    | $(dirname $0)/filter_unks.py $WORK/data/vocab \
+    > $WORK/data/dev.samples.java.pp.bpe 
+
+  wc $WORK/data/dev.samples.java.pp.bpe
 fi
