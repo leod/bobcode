@@ -206,6 +206,8 @@ if [ ! -e $WORK/data/alltrain.samples.java.pp.bpe ]; then
 fi
 
 if [ ! -e $WORK/data/vocab ]; then
+  echo "15] Building vocabulary"
+
   onmt-build-vocab \
     --min_frequency $MIN_FREQ \
     $WORK/data/alltrain.java.pp.bpe \
