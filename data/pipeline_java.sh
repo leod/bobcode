@@ -23,6 +23,9 @@ PERC_UNINDENT=50
 # Minimal frequency for the vocabulary
 MIN_FREQ=50
 
+# Size of prefix to use for test samples
+TEST_SAMPLE_SIZE=256
+
 echo "Working in '$WORK'"
 
 mkdir -p $WORK
@@ -238,4 +241,26 @@ if [ ! -e $WORK/data/dev.samples.java.pp.bpe ]; then
     > $WORK/data/dev.samples.java.pp.bpe 
 
   wc $WORK/data/dev.samples.java.pp.bpe
+fi
+
+if [ ! -e $WORK/data/test.sample-prefixes.java.pp.bpe ]; then
+  echo "15] Sampling chunked test example prefixes"
+
+  find $(< $WORK/repo-paths.test.txt) \
+    -type f \
+    -name '*.java.pp.bpe' \
+    -print0 \
+    | xargs -0 cat \
+    > $WORK/data/test.java.pp.bpe
+  wc $WORK/data/test.java.pp.bpe
+
+  bin/sample_chunked_data \
+    $WORK/data/test.java.pp.bpe \
+    $TEST_SAMPLE_SIZE \
+    $NUM_SAMPLES_DEV \
+    | $(dirname $0)/unindent_samples.py $PERC_UNINDENT \
+    | $(dirname $0)/filter_unks.py $WORK/data/vocab \
+    > $WORK/data/test.sample-prefixes.java.pp.bpe 
+
+  wc $WORK/data/test.sample-prefixes.java.pp.bpe
 fi
