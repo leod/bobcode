@@ -2,6 +2,11 @@ params:
   optimizer: AdamOptimizer
   learning_rate: 2.5e-4
   gradients_accum: 32
+  decay_type: cosine_annealing
+  decay_params:
+    max_step: 1000000
+    warmup_steps: 2000
+  average_loss_in_time: True
 
 train:
   save_checkpoints_steps: 1000
@@ -12,3 +17,4 @@ train:
   batch_size: 1024
   maximum_features_length: null
   maximum_labels_length: null
+  bucket_width: 1
