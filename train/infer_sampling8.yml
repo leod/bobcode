@@ -1,0 +1,7 @@
+params:
+  beam_width: 1
+  maximum_iterations: 256
+  sampling_topk: 8
+  
+infer:
+  batch_size: 1
