@@ -16,7 +16,6 @@ set ylabel 'loss'
 
 set key right top
 
-plot 'train_java.trainloss.data' t 'train loss' w lines ls 1, \
-     'train_java.trainloss.avg5.data' t 'train loss, moving average of 5' w lines ls 3, \
-     'train_java.devloss.data' t 'dev loss' w lines ls 2
+plot 'train_java.trainloss.avg5.data' t 'train loss, moving average of 20' w lines ls 4, \
+     'train_java.devloss.data' t 'dev loss' w lines ls 3
 

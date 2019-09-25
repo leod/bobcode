@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 
 BEGIN {
-  size=5
+  size=20
 }
 {
   mod = NR%size
