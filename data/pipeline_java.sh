@@ -15,7 +15,7 @@ SAMPLE_SIZE=512
 NUM_SAMPLES=40000000
 
 # Number of samples to generate for dev data
-NUM_SAMPLES_DEV=10000
+NUM_SAMPLES_DEV=1000
 
 # Percentage of samples to *attempt* to unindent
 PERC_UNINDENT=50
