@@ -1,0 +1,6 @@
+params:
+  beam_width: 5
+  maximum_iterations: 256
+  
+infer:
+  batch_size: 1
