@@ -58,12 +58,13 @@ class GPT2Small(onmt.models.LanguageModel):
     })
 
   def _call(self, features, labels, params, mode):
-    #features['ids'] = tf.Print(features['ids'], [tf.shape(features['ids']), features['ids']], summarize=1000)
-    features = {
-        "tokens": tf.concat([[[onmt.constants.START_OF_SENTENCE_TOKEN]], features["tokens"]], 1),
-        "ids": tf.concat([[[onmt.constants.START_OF_SENTENCE_ID]], features["ids"]], 1),
-        "length": features["length"]+1
-    }
+    if mode == tf.estimator.ModeKeys.PREDICT:
+      #features['ids'] = tf.Print(features['ids'], [tf.shape(features['ids']), features['ids']], summarize=1000)
+      features = {
+          "tokens": tf.concat([[[onmt.constants.START_OF_SENTENCE_TOKEN]], features["tokens"]], 1),
+          "ids": tf.concat([[[onmt.constants.START_OF_SENTENCE_ID]], features["ids"]], 1),
+          "length": features["length"]+1
+      }
     return super(GPT2Small, self)._call(features, labels, params, mode)
 
 # Special case the language model inputter so that examples do not end with
