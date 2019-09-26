@@ -14,8 +14,10 @@ set terminal pngcairo size 800,600 font 'Verdana,10'
 set xlabel 'step'
 set ylabel 'loss'
 
+set xrange [2500:]
+
 set key right top
 
-plot 'train_java.trainloss.avg5.data' t 'train loss, moving average of 20' w lines ls 4, \
+plot 'train_java.trainloss.avg20.data' t 'train loss, moving average of 20' w lines ls 4, \
      'train_java.devloss.data' t 'dev loss' w lines ls 3
 
