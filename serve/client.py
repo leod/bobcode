@@ -20,10 +20,12 @@ class Generator:
                host,
                port,
                model_name,
-               bpe_codes):
+               bpe_codes,
+               max_toks=512):
     channel = grpc.insecure_channel("%s:%d" % (host, port))
     self.stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
     self.model_name = model_name
+    self.max_toks = max_toks
 
     with open(bpe_codes) as f:
       self.bpe = apply_bpe.BPE(f)
@@ -63,7 +65,11 @@ class Generator:
 
     predictions = tf.make_ndarray(result.outputs["tokens"])[:, 1:]
 
-    hyp = ' '.join([token.decode('utf-8') for token in predictions[0]])
+    toks = [token.decode('utf-8') for token in predictions[0]]
+    if len(toks) > self.max_toks:
+      toks = toks[:self.max_toks]
+
+    hyp = ' '.join(toks)
 
     return self.postprocess(hyp)
 
