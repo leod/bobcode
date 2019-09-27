@@ -12,7 +12,7 @@ import grpc
 import tensorflow as tf
 from tensorflow_serving.apis import predict_pb2, prediction_service_pb2_grpc
 
-import java_tokenize
+import data.java_tokenize as java_tokenize
 import subword_nmt.apply_bpe as apply_bpe
 
 class Generator:
