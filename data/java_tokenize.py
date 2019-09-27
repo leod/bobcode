@@ -43,7 +43,7 @@ def tokenize(s, out, skip_license=False):
 
   had_package = False
 
-  for tok in tokenizer.tokenize(contents):
+  for tok in tokenizer.tokenize(s):
     num_newlines = tok.position[0] - prev_line
     if num_newlines > 0:
       out.write(NEWLINE_SYMBOL * num_newlines)
