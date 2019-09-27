@@ -1,3 +1,5 @@
 subword-nmt
 OpenNMT-tf
 tensorflow-serving-api
+flask
+uwsgi
