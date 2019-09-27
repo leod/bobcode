@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+
+    <style>
+      body {
+        font-family: Verdana, Geneva, sans-serif;
+      }
+    </style>
+
+    <title>bobcode</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>bobcode</h1>
+
+      <form class="my-4" action="javascript:request()">
+        <div class="form-group">
+          <textarea rows="4" class="form-control" id="form-context"></textarea> </div>
+        <button type="submit" class="btn btn-secondary">Generate</button>
+      </form> 
+      <div id="gen">
+        <p id="status"></p>
+
+        <div id="code_div">
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function request() {
+        context = $("#form-context").val().trim();
+
+        if (context === "") {
+          return;
+        }
+
+        $("#code_div").empty();
+        $("#status").text("Generating code...").show();
+        $("#gen").show();
+
+        $.post(
+          "/gen",
+          { context: context },
+        )
+        .done(function(hyp) {
+          $("#code_div").empty();
+          $("#status").hide();
+
+          code = "<pre id=\"code\"><code class=\"java\">";
+          code += hyp;
+          code += "</code></pre>";
+
+          $("#code_div").append(code);
+
+          hljs.highlightBlock(document.getElementById("code"));
+        })
+        .fail(function(_xhr, _status, _errorThrown) {
+          $("#status").text("Request failed.");
+        });
+      }      
+    </script>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+
+    <script>
+      $('#form-context').keydown(function (e) {
+        var keyCode = e.keyCode || e.which;
+
+        if (keyCode == 9) {
+          e.preventDefault();
+          var start = this.selectionStart;
+          var end = this.selectionEnd;
+          var text = $(this).val();
+          var selText = text.substring(start, end);
+          $(this).val(text.substring(0, start) +
+            "    " + selText.replace(/\n/g, "\n\t") +
+            text.substring(end));
+          this.selectionStart = this.selectionEnd = start + 4;
+        }
+      });
+    </script>
+  </body>
+</html>
