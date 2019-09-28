@@ -53,6 +53,7 @@ class Generator:
 
   def __call__(self, context, timeout=50.0):
     context_pp = self.preprocess(context)
+    context_pp = [(java_tokenize.NEWLINE_SYMBOL + java_tokenize.NEWLINE_SYMBOL)] + context_pp
 
     request = predict_pb2.PredictRequest()
     request.model_spec.name = self.model_name
@@ -63,7 +64,7 @@ class Generator:
 
     result = self.stub.Predict.future(request, timeout).result()
 
-    predictions = tf.make_ndarray(result.outputs["tokens"])[:, 1:]
+    predictions = tf.make_ndarray(result.outputs["tokens"])[:, 2:]
 
     toks = [token.decode('utf-8') for token in predictions[0]]
     if len(toks) > self.max_toks:
