@@ -16,28 +16,28 @@ def gelu(x):
   return 0.5 * x * (1 + tf.tanh(np.sqrt(2 / np.pi)
     * (x + 0.044715 * tf.pow(x, 3))))
 
-class GPT2Small(onmt.models.LanguageModel):
-  """GPT-2 language model (small version) as described in:
+class GPT2Medium(onmt.models.LanguageModel):
+  """GPT-2 language model (medium version) as described in:
   https://d4mucfpksywv.cloudfront.net/better-language-models/language-models.pdf
   """
 
   def __init__(self):
-    super(GPT2Small, self).__init__(
+    super(GPT2Medium, self).__init__(
         decoder=onmt.decoders.SelfAttentionDecoderV2(
-            num_layers=12,
-            num_units=768,
+            num_layers=24,
+            num_units=1020,
             num_heads=12,
             ffn_inner_dim=3072,
             ffn_activation=gelu,
             position_encoder=onmt.layers.PositionEmbedder(maximum_position=1024),
             num_sources=0),
-        embedding_size=768)
+        embedding_size=1020)
     self.examples_inputter = ChunkedLanguageModelInputter(
         "vocabulary",
-        embedding_size=768)
+        embedding_size=1020)
 
   def auto_config(self, num_devices=1):
-    config = super(GPT2Small, self).auto_config(num_devices=num_devices)
+    config = super(GPT2Medium, self).auto_config(num_devices=num_devices)
     return misc.merge_dict(config, {
         "params": {
             "average_loss_in_time": True,
@@ -64,7 +64,7 @@ class GPT2Small(onmt.models.LanguageModel):
           "ids": tf.concat([[[onmt.constants.START_OF_SENTENCE_ID]], features["ids"]], 1),
           "length": features["length"]+1
       }
-    return super(GPT2Small, self)._call(features, labels, params, mode)
+    return super(GPT2Medium, self)._call(features, labels, params, mode)
 
 # Special case the language model inputter so that examples do not end with
 # </s>. We need to do this because we train on (almost) fixed size examples of
@@ -89,4 +89,4 @@ class ChunkedLanguageModelInputter(onmt.models.language_model.LanguageModelInput
     return features, labels
 
 def model():
-  return GPT2Small()
+  return GPT2Medium()
