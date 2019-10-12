@@ -18,6 +18,8 @@ set xrange [2500:]
 
 set key right top
 
-plot 'train_java.trainloss.avg20.data' t 'train loss, moving average of 20' w lines ls 4, \
-     'train_java.devloss.data' t 'dev loss' w lines ls 3
+plot 'train_java.trainloss.avg20.data' t 'train loss (small), moving average of 20' w lines ls 4, \
+     'train_java.devloss.data' t 'dev loss (small)' w lines ls 3, \
+     'train_java_medium.trainloss.avg20.data' t 'train loss (medium), moving average of 20' w lines ls 1, \
+     'train_java_medium.devloss.data' t 'dev loss (medium)' w lines ls 2
 
