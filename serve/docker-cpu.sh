@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [ ! "$#" -eq 2 ]; then
-	echo "Usage: $0 <model> <port>"
-	exit 1
+  echo "Usage: $0 <model> <port>"
+  exit 1
 fi
 
 MODEL=$1
